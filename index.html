@@ -298,12 +298,12 @@ html.intro-lock{overflow:hidden}
     <div class="stage-view" id="stage-view" tabindex="0" role="group" aria-label="Galería 3D de trabajos. Usa las flechas izquierda y derecha para girar y Enter para reproducir." data-i18n-aria="stage.label">
       <canvas id="stage-canvas"></canvas>
       <div class="flat" id="flat" hidden></div>
-      <p class="draft" id="draft" data-i18n="stage.draft" hidden>Borrador: estas seis pantallas son espacios de muestra para tus comerciales.</p>
+      <p class="draft" id="draft" data-i18n="stage.draft" hidden>Borrador: estas pantallas son espacios de muestra para tus comerciales.</p>
       <p class="hint" id="hint" data-i18n="stage.hint">Arrastra para girar</p>
     </div>
     <div class="hud wrap">
       <div class="now">
-        <p class="now-meta"><span class="count" id="now-count">01 / 06</span><span id="now-type">Comercial para redes</span><span id="now-secs">30 s</span></p>
+        <p class="now-meta"><span class="count" id="now-count">01 / 06</span><span id="now-type">Demo de 10 segundos</span><span id="now-secs"></span></p>
         <h3 class="now-title" id="now-title" aria-live="polite">Restaurante</h3>
       </div>
       <div class="controls">
@@ -573,19 +573,17 @@ requestAnimationFrame(tick);
 /* ============================================================
    CONTENIDO EDITABLE
    - CONFIG: correo y WhatsApp que se muestran en Contacto.
-   - WORKS: una entrada por pieza. "h" es el archivo horizontal (16:9)
-     y "v" el vertical (9:16), por ejemplo "videos/restaurante-h.mp4".
-     Mientras estén vacíos, la pantalla muestra un espacio de muestra.
+   - WORKS: una entrada por pieza. "h" es el video liviano que corre en el
+     carrusel (16:9, sin audio), "hd" el que abre el reproductor (con audio),
+     "poster" la imagen fija y "v" una versión vertical opcional (9:16).
+     Mientras "h" esté vacío, la pantalla muestra un espacio de muestra.
    ============================================================ */
 var CONFIG = { email:'jhosuer777@gmail.com', whatsapp:'50765348511', whatsappText:'+507 6534-8511' };
 
 var WORKS = [
-  { title:{es:'Restaurante',en:'Restaurant'},                  type:'social', secs:30, h:'', v:'', scene:'plate',   pal:['#2b140d','#b7472e','#f3cfa6'] },
-  { title:{es:'Turismo y aventura',en:'Tourism and adventure'}, type:'social', secs:30, h:'', v:'', scene:'ridge',   pal:['#0f2529','#2f6f6a','#ecdcb9'] },
-  { title:{es:'Bienes raíces',en:'Real estate'},               type:'social', secs:60, h:'', v:'', scene:'house',   pal:['#18212d','#5f7f9c','#f4e6cc'] },
-  { title:{es:'Hotel boutique',en:'Boutique hotel'},           type:'social', secs:30, h:'', v:'', scene:'windows', pal:['#1c1524','#74486a','#f5c98a'] },
-  { title:{es:'Tienda local',en:'Local shop'},                 type:'tv',     secs:30, h:'', v:'', scene:'aisle',   pal:['#211f18','#9c8236','#f5ead0'] },
-  { title:{es:'Producto',en:'Product'},                        type:'social', secs:30, h:'', v:'', scene:'pack',    pal:['#121917','#4c7c69','#e8f0e6'] }
+  { title:{es:'Ana',en:'Ana'},       kind:{es:'Turismo de aventura',en:'Adventure tourism'}, type:'demo', h:'videos/ana-ring.mp4',    hd:'videos/ana.mp4',    poster:'videos/ana.jpg',    v:'', scene:'ridge',   pal:['#0f2529','#2f6f6a','#ecdcb9'] },
+  { title:{es:'Daniel',en:'Daniel'}, kind:{es:'Hotel boutique',en:'Boutique hotel'},         type:'demo', h:'videos/daniel-ring.mp4', hd:{es:'videos/daniel-es.mp4',en:'videos/daniel-en.mp4'}, poster:'videos/daniel.jpg', v:'', scene:'windows', pal:['#1c1524','#74486a','#f5c98a'] },
+  { title:{es:'Linda',en:'Linda'},   kind:{es:'Tour de café',en:'Coffee tour'},              type:'demo', h:'videos/linda-ring.mp4',  hd:'videos/linda.mp4',  poster:'videos/linda.jpg',  v:'', scene:'plate',   pal:['#2b140d','#b7472e','#f3cfa6'] }
 ];
 
 var I18N = {
@@ -597,10 +595,10 @@ var I18N = {
     'hero.cta':'Hablemos de tu comercial',
     'stage.label':'Galería 3D de trabajos. Usa las flechas izquierda y derecha para girar y Enter para reproducir.',
     'stage.hint':'Arrastra para girar',
-    'stage.draft':'Borrador: estas seis pantallas son espacios de muestra para tus comerciales.',
+    'stage.draft':'Borrador: estas pantallas son espacios de muestra para tus comerciales.',
     'fmt.label':'Formato','fmt.h':'Horizontal 16:9','fmt.v':'Vertical 9:16',
     'prev':'Anterior','next':'Siguiente','play':'Reproducir',
-    'slot':'Espacio','type.social':'Comercial para redes','type.tv':'Spot para televisión',
+    'slot':'Espacio','type.social':'Comercial para redes','type.tv':'Spot para televisión','type.demo':'Demo de 10 segundos',
     'method.h':'Cómo trabajamos a distancia','who.you':'Tú',
     's1.h':'Nos envías tu material',
     's1.p':'Grabas con tu celular, en horizontal y en vertical. Te decimos qué tomas necesitamos. Si ya tienes fotos y videos de tu negocio, partimos de ahí.',
@@ -636,10 +634,10 @@ var I18N = {
     'hero.cta':'Talk about your commercial',
     'stage.label':'3D gallery of work. Use the left and right arrow keys to rotate and Enter to play.',
     'stage.hint':'Drag to rotate',
-    'stage.draft':'Draft: these six screens are sample slots for your commercials.',
+    'stage.draft':'Draft: these screens are sample slots for your commercials.',
     'fmt.label':'Format','fmt.h':'Landscape 16:9','fmt.v':'Vertical 9:16',
     'prev':'Previous','next':'Next','play':'Play',
-    'slot':'Slot','type.social':'Social commercial','type.tv':'TV spot',
+    'slot':'Slot','type.social':'Social commercial','type.tv':'TV spot','type.demo':'10-second demo',
     'method.h':'How we work remotely','who.you':'You',
     's1.h':'You send us your footage',
     's1.p':'You film on your phone, in landscape and in vertical. We tell you which shots we need. If you already have photos and videos of your business, we start from those.',
@@ -840,7 +838,7 @@ function sizeCanvas(w){
 var works = WORKS.map(function(d,i){
   var w={}; for (var k in d) w[k]=d[k];
   w.i=i; w.canvas=document.createElement('canvas'); w.ctx=w.canvas.getContext('2d');
-  w.t0=3+i*4.7; w.video=null; w.ready=false;
+  w.t0=3+i*4.7; w.video=null; w.ready=false; w.still=false; if (!w.secs) w.secs=30;
   if (w.h||w.v) hasAnyVideo=true;
   sizeCanvas(w); paint(w,w.t0);
   return w;
@@ -859,7 +857,7 @@ function updateHud(){
   var w=works[focusIdx];
   $('now-count').textContent=pad(focusIdx+1)+' / '+pad(N);
   $('now-type').textContent=tr('type.'+w.type);
-  $('now-secs').textContent=w.secs+' s';
+  $('now-secs').textContent=w.kind?w.kind[lang]:(w.secs?w.secs+' s':'');
   $('now-title').textContent=w.title[lang];
   works.forEach(function(o,i){
     o.btn.firstChild.textContent=pad(i+1);
@@ -892,7 +890,7 @@ function renderWays(){
   }
 }
 function repaintAll(){
-  works.forEach(function(w){ if (!w.ready){ paint(w,w.t0); if (w.tex) w.tex.needsUpdate=true; } });
+  works.forEach(function(w){ if (!w.ready && !w.still){ paint(w,w.t0); if (w.tex) w.tex.needsUpdate=true; } });
 }
 function setLang(l){
   lang=l; document.documentElement.lang=l;
@@ -937,12 +935,12 @@ for (var ai=0; ai<anchors.length; ai++) anchors[ai].addEventListener('click',fun
 var player=$('player'), pv=$('player-video'), pc=$('player-canvas'), pctx=pc.getContext('2d');
 var playerWork=null, lastFocusEl=null;
 function openPlayer(i){
-  var w=works[i], src=pickSrc(w);
+  var w=works[i], src=(w.hd && typeof w.hd==='object' ? w.hd[lang] : w.hd)||pickSrc(w);
   playerWork=w; lastFocusEl=document.activeElement;
   $('player-title').textContent=w.title[lang];
   $('player-frame').setAttribute('data-fmt',orient);
   if (src){
-    pc.hidden=true; pv.hidden=false; pv.src=src; $('player-note').textContent=tr('type.'+w.type)+', '+w.secs+' s';
+    pc.hidden=true; pv.hidden=false; pv.src=src; $('player-note').textContent=tr('type.'+w.type)+(w.kind?', '+w.kind[lang]:'');
     var pr=pv.play(); if (pr && pr.catch) pr.catch(function(){});
   } else {
     pv.hidden=true; pc.hidden=false; pc.width=orient==='v'?720:1280; pc.height=orient==='v'?1280:720;
@@ -972,7 +970,7 @@ function syncVideos(){
     else w.video.pause();
   });
 }
-function onFocus(){ updateHud(); syncVideos(); }
+function onFocus(){ updateHud(); if (three) three.ensure(focusIdx); syncVideos(); }
 
 /* ---------- 3D stage ---------- */
 var three=null;
@@ -1000,6 +998,7 @@ function initThree(){
   })();
 
   var ring=new T.Group(); scene.add(ring);
+  var EDGE=Math.min(2.35,N/2-0.15); /* where a screen fades out before it wraps to the other side */
   var meshes=[];
   function prepTex(tex){ tex.minFilter=T.LinearFilter; tex.magFilter=T.LinearFilter; tex.generateMipmaps=false; return tex; }
   works.forEach(function(w,i){
@@ -1010,16 +1009,24 @@ function initThree(){
     w.mesh=new T.Mesh(geo,w.mat); w.mesh.userData.i=i;
     w.ref=new T.Mesh(geoRef,w.rmat);
     holder.add(w.mesh); holder.add(w.ref); ring.add(holder); meshes.push(w.mesh);
-    if (w.h||w.v){
-      var v=document.createElement('video');
-      v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=pickSrc(w);
-      v.addEventListener('loadeddata',function(){
-        if (!w.vtex){ w.vtex=prepTex(new T.VideoTexture(v)); }
-        w.tex=w.vtex; w.mat.map=w.vtex; w.rmat.map=w.vtex; w.mat.needsUpdate=true; w.rmat.needsUpdate=true; w.ready=true; syncVideos();
+    if (w.poster){
+      new T.TextureLoader().load(w.poster,function(tx){
+        prepTex(tx); w.ptex=tx; w.still=true;
+        if (!w.ready){ w.tex=tx; w.mat.map=tx; w.rmat.map=tx; w.mat.needsUpdate=true; w.rmat.needsUpdate=true; }
       });
-      w.video=v;
     }
   });
+  /* a screen loads its video the first time it comes to the front */
+  function ensureVideo(w){
+    if (w.video || !(w.h||w.v)) return;
+    var v=document.createElement('video');
+    v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=pickSrc(w);
+    v.addEventListener('loadeddata',function(){
+      if (!w.vtex){ w.vtex=prepTex(new T.VideoTexture(v)); }
+      w.tex=w.vtex; w.mat.map=w.vtex; w.rmat.map=w.vtex; w.mat.needsUpdate=true; w.rmat.needsUpdate=true; w.ready=true; syncVideos();
+    });
+    w.video=v;
+  }
 
   /* viewfinder marks taken from the logo: two brackets and two diagonals */
   function lineMesh(count,color){
@@ -1061,7 +1068,9 @@ function initThree(){
 
   function fit(w,ma){
     var tex=w.tex, ta;
-    if (w.ready && w.video.videoWidth) ta=w.video.videoWidth/w.video.videoHeight; else ta=w.canvas.width/w.canvas.height;
+    if (w.ready && w.video.videoWidth) ta=w.video.videoWidth/w.video.videoHeight;
+    else if (w.still && w.ptex.image && w.ptex.image.width) ta=w.ptex.image.width/w.ptex.image.height;
+    else ta=w.canvas.width/w.canvas.height;
     if (ma>ta){ var ry=ta/ma; tex.repeat.set(1,ry); tex.offset.set(0,(1-ry)/2); }
     else { var rx=ma/ta; tex.repeat.set(rx,1); tex.offset.set((1-rx)/2,0); }
   }
@@ -1087,7 +1096,7 @@ function initThree(){
       orient=o;
       works.forEach(function(w){
         sizeCanvas(w);
-        if (!w.ready){ paint(w,w.t0); w.tex.needsUpdate=true; }
+        if (!w.ready && !w.still){ paint(w,w.t0); w.tex.needsUpdate=true; }
         if (w.video && w.h && w.v){ w.video.src=pickSrc(w); w.video.load(); }
       });
       syncVideos();
@@ -1097,7 +1106,7 @@ function initThree(){
     var fi=mod(Math.round(drag?angle:target),N); if (fi!==focusIdx){ focusIdx=fi; onFocus(); }
     intro=Math.min(1,intro+dt/1.0);
     works.forEach(function(w,i){
-      var dd=wrap(i-angle), ad=Math.abs(dd), fade=Math.max(0,Math.min(1,(2.35-ad)/0.45));
+      var dd=wrap(i-angle), ad=Math.abs(dd), fade=Math.max(0,Math.min(1,(EDGE-ad)/0.35));
       var b=lerp(1,0.34,Math.min(1,ad))*fade*intro;
       w.holder.rotation.y=dd*STEP; w.mesh.visible=w.ref.visible=fade>0.01;
       w.mat.color.setScalar(b); w.rmat.color.setScalar(b);
@@ -1116,7 +1125,7 @@ function initThree(){
       if (acc>=1/24){
         acc=0; tick++;
         works.forEach(function(w,i){
-          if (w.ready) return;
+          if (w.ready || w.still) return;
           var d=Math.abs(wrap(i-focusIdx));
           if (d===0 || (d===1 && tick%3===0)){ paint(w,t+w.t0); w.tex.needsUpdate=true; }
         });
@@ -1142,10 +1151,12 @@ function initThree(){
   }
   document.addEventListener('visibilitychange',function(){ setRunning(inView && !document.hidden && !held); });
   window.addEventListener('jr:reveal',function(){ held=false; setRunning(inView && !document.hidden); });
+  ensureVideo(works[focusIdx]);
   update(0.016,0); renderer.render(scene,camera);
   setRunning(!held);
 
   return {
+    ensure:function(i){ ensureVideo(works[i]); },
     hit:function(e){
       var r=canvas.getBoundingClientRect();
       ndc.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
@@ -1167,8 +1178,8 @@ function initFlat(){
     if (o!==orient){ orient=o; works.forEach(sizeCanvas); changed=true; f=fmtTarget; }
     angle=target;
     var fi=mod(Math.round(target),N);
-    if (fi!==focusIdx || shown<0 || changed){ focusIdx=fi; shown=fi; flat.textContent=''; flat.appendChild(works[fi].canvas); paint(works[fi],works[fi].t0); updateHud(); }
-    if (!reduce && now-lastT>42){ lastT=now; paint(works[focusIdx],now/1000+works[focusIdx].t0); }
+    if (fi!==focusIdx || shown<0 || changed){ focusIdx=fi; shown=fi; flat.textContent=''; var fw=works[fi]; if (fw.h){ var fv=document.createElement('video'); fv.src=fw.h; fv.muted=true; fv.loop=true; fv.autoplay=true; fv.playsInline=true; fv.poster=fw.poster||''; flat.appendChild(fv); } else { flat.appendChild(fw.canvas); paint(fw,fw.t0); } updateHud(); }
+    if (!reduce && !works[focusIdx].h && now-lastT>42){ lastT=now; paint(works[focusIdx],now/1000+works[focusIdx].t0); }
   }
   requestAnimationFrame(loop);
 }
